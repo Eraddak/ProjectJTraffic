@@ -1,18 +1,33 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Group;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import sample.Roads.Roads;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
 
+    int windowSizeX = 1000;
+    int windowSizeY = 600;
+
+    public Group groupWay(){
+
+        Group group = new Group();
+
+        return group;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(this.getClass().getResource("sample.fxml"));
+        Group root = Cities.getInstance().getGroup();
+        root.getChildren().add(Roads.getInstance().getGroup());
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, windowSizeX, windowSizeY, Color.web("0x111111",1.0)));
         primaryStage.show();
     }
 
