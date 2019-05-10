@@ -1,8 +1,8 @@
 package sample;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
@@ -10,10 +10,8 @@ import java.util.ArrayList;
 public class Reseau {
 
     private static Group group = new Group();
-    private static ArrayList<Circle> cityTab = new ArrayList<>();
+    private static ArrayList<Ville> cityTab = new ArrayList<>();
     private static ArrayList<Line> roadTab = new ArrayList<>();
-
-    private static Reseau instance;
 
     public static Reseau getInstance() {
         if (null == instance) {
@@ -24,12 +22,12 @@ public class Reseau {
 
     private Reseau(){
         // Villes
-        Circle newCity1 = new Circle(200, 200,10, Color.web("0xff0000",1.0));
-        Circle newCity2 = new Circle(200, 500,10, Color.web("0xff0000",1.0));
-        Circle newCity3 = new Circle(600, 50,10, Color.web("0xff0000",1.0));
-        Circle newCity4 = new Circle(800, 300,10, Color.web("0xff0000",1.0));
-        Circle newCity5 = new Circle(550, 450,10, Color.web("0xff0000",1.0));
-        Circle newCity6 = new Circle(500, 550,10, Color.web("0xff0000",1.0));
+        Ville newCity1 = new Ville(new Point2D(200, 200));
+        Ville newCity2 = new Ville(new Point2D(200, 500));
+        Ville newCity3 = new Ville(new Point2D(600, 50));
+        Ville newCity4 = new Ville(new Point2D(800, 300));
+        Ville newCity5 = new Ville(new Point2D(550, 450));
+        Ville newCity6 = new Ville(new Point2D(500, 550));
         cityTab.add(newCity1);
         cityTab.add(newCity2);
         cityTab.add(newCity3);
@@ -39,29 +37,33 @@ public class Reseau {
 
         // Routes
         for(int i=0; i<6; i++){
-            Line road1 = new Line(cityTab.get(i).getCenterX(), cityTab.get(i).getCenterY(),
-                    cityTab.get((i+1)%6).getCenterX(), cityTab.get((i+1)%6).getCenterY());
+            Line road1 = new Line(cityTab.get(i).getVille().getCenterX(), cityTab.get(i).getVille().getCenterY(),
+                    cityTab.get((i+1)%6).getVille().getCenterX(), cityTab.get((i+1)%6).getVille().getCenterY());
             road1.setStroke(Color.BLUE);
-            Line road2 = new Line(cityTab.get(i).getCenterX(), cityTab.get(i).getCenterY(),
-                    cityTab.get((i+2)%6).getCenterX(), cityTab.get((i+2)%6).getCenterY());
+            Line road2 = new Line(cityTab.get(i).getVille().getCenterX(), cityTab.get(i).getVille().getCenterY(),
+                    cityTab.get((i+2)%6).getVille().getCenterX(), cityTab.get((i+2)%6).getVille().getCenterY());
             road2.setStroke(Color.BLUE);
             roadTab.add(road1);
             roadTab.add(road2);
         }
         group.getChildren().addAll(roadTab);
-        group.getChildren().addAll(cityTab);
+        for(Ville i: cityTab) {
+            group.getChildren().add(i.getVille());
+        }
 
     }
 
-    public static Group getGroup() {
+    private static Reseau instance;
+
+    public Group getGroup() {
         return group;
     }
 
-    public static ArrayList<Circle> getCityTab() {
+    public ArrayList<Ville> getCityTab() {
         return cityTab;
     }
 
-    public static ArrayList<Line> getRoadTab() {
+    public ArrayList<Line> getRoadTab() {
         return roadTab;
     }
 }

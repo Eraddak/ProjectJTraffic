@@ -41,18 +41,19 @@ public class Car extends Thread {
         this.depart = depart;
         this.end = end;
 
-        this.r = Math.sqrt(Math.pow(this.end.getX()-this.depart.getX(), 2) + Math.pow(this.end.getY()-this.depart.getY(), 2));
-        this.angle = Math.acos((this.end.getX() - this.depart.getX())/r);
 
-        this.rotation = new Rotate(Math.toDegrees(this.angle),
-                this.voiture.getX() + this.voiture.getWidth()/2,
-                this.voiture.getY() + this.voiture.getHeight()/2);
+        this.r = Math.sqrt(Math.pow(this.end.getX()-this.depart.getX(), 2) + Math.pow(this.end.getY()-this.depart.getY(), 2));
+        this.angle = Math.toDegrees(Math.atan2(this.end.getY() - this.depart.getY(), this.end.getX() - this.depart.getX()));
+        System.out.println(angle);
 
         this.voiture.setX(this.depart.getX());
         this.voiture.setY(this.depart.getY());
         this.voiture.setHeight(10.0);
         this.voiture.setWidth(20.0);
         this.voiture.setStroke(Color.RED);
+
+        this.rotation = new Rotate(this.angle, this.voiture.getX(), this.voiture.getY());
+
         //A TESTER // redéfini l'origine
         /*
         this.voiture.getTransforms().add(new Shear(this.voiture.getX() + this.voiture.getWidth()/2,
