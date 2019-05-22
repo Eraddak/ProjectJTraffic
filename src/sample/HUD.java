@@ -20,7 +20,7 @@ public class HUD {
 	public HUD() {
 		
 		final Slider traffic_slider = new Slider(50,500,100);
-		final Label traffic_label = new Label(" Traffic  :");
+		final Label traffic_label = new Label(" Densité du traffic  :");
 		final Label traffic_value = new Label(Double.toString(traffic_slider.getValue()));
 		traffic_value.textProperty().bind(
 	            Bindings.format(
@@ -29,7 +29,7 @@ public class HUD {
 	            )
 	        );
 		final Slider vitesse_slider = new Slider(-40,40,0);
-		final Label vitesse_label = new Label(" Vitesse :");
+		final Label vitesse_label = new Label(" Vitesse moyenne :");
 		final Label vitesse_value = new Label(Double.toString(vitesse_slider.getValue()));
 		vitesse_value.textProperty().bind(
 	            Bindings.format(
