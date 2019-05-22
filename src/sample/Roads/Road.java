@@ -1,36 +1,41 @@
 package sample.Roads;
 
-public class Road {
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Line;
+import javafx.util.Pair;
+import sample.Intersection;
+import sample.Ville;
 
-    private int startX;
-    private int startY;
-    private int endX;
-    private int endY;
+public abstract class Road {
 
-    public Road() {
-        this.startX = 0;
-        this.startY = 0;
-        this.endX = 0;
-        this.endY = 0;
-    }
+    private Intersection start;
+    private Intersection end;
+    protected Line line;
+    protected Double vitesseMax;
+    protected Double nbVoies;
+    protected Pair<Intersection, Intersection> villes;
 
-    public Road(int StartX, int StartY, int EndX, int EndY) {
-        this.startX = StartX;
-        this.startY = StartY;
-        this.endX = EndX;
-        this.endY = EndY;
+    public Road(Intersection start, Intersection end) {
+        this.start = start;
+        this.end = end;
+        this.villes = new Pair<>(start, end);
+        this.line = new Line(this.start.getPosition().getX(), this.start.getPosition().getY(), this.end.getPosition().getX(), this.end.getPosition().getY());
     }
 
-    public int getStartX() {
-        return startX;
+    public Double getVitesseMax() {
+        return vitesseMax;
     }
-    public int getStartY() {
-        return startY;
+    public Intersection getStart() {
+        return start;
     }
-    public int getEndX() {
-        return endX;
+    public Intersection getEnd() {
+        return end;
     }
-    public int getEndY() {
-        return endY;
+    public Line getLine() {
+        return line;
     }
+    public Double getDistance(){
+        return Math.sqrt(Math.pow(this.end.getPosition().getX()-this.start.getPosition().getX(), 2) + Math.pow(this.end.getPosition().getY()-this.start.getPosition().getY(), 2));
+    }
+
 }

@@ -2,16 +2,17 @@ package sample;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import sample.Roads.Road;
+import sample.Roads.Road80;
 
 import java.util.ArrayList;
 
 public class Reseau {
 
-    private static Group group = new Group();
+    private static Group groupCity = new Group();
+    private static Group groupRoad = new Group();
     private static ArrayList<Ville> cityTab = new ArrayList<>();
-    private static ArrayList<Line> roadTab = new ArrayList<>();
+    private static ArrayList<Road> roadTab = new ArrayList<>();
 
     public static Reseau getInstance() {
         if (null == instance) {
@@ -21,6 +22,8 @@ public class Reseau {
     }
 
     private Reseau(){
+        Road80 tmp;
+
         // Villes
         Ville newCity1 = new Ville(new Point2D(200, 200));
         Ville newCity2 = new Ville(new Point2D(200, 500));
@@ -37,33 +40,36 @@ public class Reseau {
 
         // Routes
         for(int i=0; i<6; i++){
-            Line road1 = new Line(cityTab.get(i).getVille().getCenterX(), cityTab.get(i).getVille().getCenterY(),
-                    cityTab.get((i+1)%6).getVille().getCenterX(), cityTab.get((i+1)%6).getVille().getCenterY());
-            road1.setStroke(Color.BLUE);
-            Line road2 = new Line(cityTab.get(i).getVille().getCenterX(), cityTab.get(i).getVille().getCenterY(),
-                    cityTab.get((i+2)%6).getVille().getCenterX(), cityTab.get((i+2)%6).getVille().getCenterY());
-            road2.setStroke(Color.BLUE);
-            roadTab.add(road1);
-            roadTab.add(road2);
+            tmp = new Road80(cityTab.get(i), cityTab.get((i+1)%6));
+            cityTab.get(i).addRoad(tmp);
+            cityTab.get((i+1)%6).addRoad(tmp);
+            roadTab.add(tmp);
         }
-        group.getChildren().addAll(roadTab);
+
+        for(Road i : roadTab){
+            groupRoad.getChildren().add(i.getLine());
+        }
         for(Ville i: cityTab) {
-            group.getChildren().add(i.getVille());
+            groupCity.getChildren().add(i.getVille());
         }
 
     }
 
     private static Reseau instance;
 
-    public Group getGroup() {
-        return group;
+    public Group getGroupCity() {
+        return groupCity;
+    }
+
+    public Group getGroupRoad() {
+        return groupRoad;
     }
 
     public ArrayList<Ville> getCityTab() {
         return cityTab;
     }
 
-    public ArrayList<Line> getRoadTab() {
+    public ArrayList<Road> getRoadTab() {
         return roadTab;
     }
 }
