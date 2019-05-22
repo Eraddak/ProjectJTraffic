@@ -13,11 +13,21 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 
+import java.awt.*;
+
 public class HUD {
 	
 	private Group groupHUD = new Group();
-			
-	public HUD() {
+
+	private static HUD instance;
+
+	public static HUD getInstance(){
+		if(instance == null)
+			instance = new HUD();
+		return instance;
+	}
+
+	private HUD() {
 		
 		final Slider traffic_slider = new Slider(50,500,100);
 		final Label traffic_label = new Label(" Traffic  :");
