@@ -2,7 +2,6 @@ package sample;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.Group;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
@@ -27,16 +26,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Group root = new Group();
         running();
-        root.getChildren().add(Reseau.getInstance().getGroupRoad());
+        Global.root.getChildren().add(Reseau.getInstance().getGroupRoad());
 
         for (Car i : Global.tab) {
-            root.getChildren().add(i.getVoiture());
+            Global.root.getChildren().add(i.getVoiture());
         }
-        //root.getChildren().add(Reseau.getInstance().getGroupCity());
 
-        primaryStage.setScene(new Scene(root, windowSizeX, windowSizeY, Color.web("0x111111", 1.0)));
+        //root.getChildren().add(Reseau.getInstance().getGroupCity());
+        Global.root.getChildren().add(HUD.getInstance().getGroup());
+
+        primaryStage.setScene(new Scene(Global.root, windowSizeX, windowSizeY, Color.web("0x111111", 1.0)));
         primaryStage.show();
     }
 

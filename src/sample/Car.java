@@ -45,7 +45,7 @@ public class Car extends Thread {
                 }
                 deplacement(deltaTime);
                 if(parcours.isEmpty()) {
-
+                    Global.root.getChildren().remove(voiture);
                     this.stop();
                 }
             }
@@ -75,6 +75,8 @@ public class Car extends Thread {
         this.rotation = new Rotate(this.angle, this.voiture.getX(), this.voiture.getY());
         this.voiture.getTransforms().add(this.rotation);
 
+        this.voiture.setY(this.depart.getY() + this.voiture.getHeight());
+
     }
 
     public void deplacement(double deltaTime){
@@ -92,12 +94,15 @@ public class Car extends Thread {
     public void nextDestination(){
         if(this.parcours.size() > 1) {
             this.currentDist = 0d;
+            this.voiture.setY(this.depart.getY());
             this.rotation = new Rotate(-this.angle, this.voiture.getX(), this.voiture.getY());
             this.voiture.getTransforms().add(this.rotation);
             this.r = Math.sqrt(Math.pow(this.parcours.get(1).getPosition().getX() - this.parcours.get(0).getPosition().getX(), 2) + Math.pow(this.parcours.get(1).getPosition().getY() - this.parcours.get(0).getPosition().getY(), 2));
             this.angle = Math.toDegrees(Math.atan2(this.parcours.get(1).getPosition().getY() - this.parcours.get(0).getPosition().getY(), this.parcours.get(1).getPosition().getX() - this.parcours.get(0).getPosition().getX()));
             this.rotation = new Rotate(this.angle, this.voiture.getX(), this.voiture.getY());
             this.voiture.getTransforms().add(this.rotation);
+            this.voiture.setY(this.depart.getY() + this.voiture.getHeight());
+
         }
         if(!this.parcours.isEmpty())
             this.parcours.remove(0);

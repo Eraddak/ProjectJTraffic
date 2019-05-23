@@ -1,10 +1,8 @@
 package sample.Roads;
 
-import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
 import javafx.util.Pair;
 import sample.Intersection;
-import sample.Ville;
 
 public abstract class Road {
 
@@ -13,12 +11,12 @@ public abstract class Road {
     protected Line line;
     protected Double vitesseMax;
     protected Double nbVoies;
-    protected Pair<Intersection, Intersection> villes;
+    protected Pair<Intersection, Intersection> intersections;
 
     public Road(Intersection start, Intersection end) {
         this.start = start;
         this.end = end;
-        this.villes = new Pair<>(start, end);
+        this.intersections = new Pair<>(start, end);
         this.line = new Line(this.start.getPosition().getX(), this.start.getPosition().getY(), this.end.getPosition().getX(), this.end.getPosition().getY());
     }
 
@@ -34,8 +32,9 @@ public abstract class Road {
     public Line getLine() {
         return line;
     }
-    public Double getDistance(){
-        return Math.sqrt(Math.pow(this.end.getPosition().getX()-this.start.getPosition().getX(), 2) + Math.pow(this.end.getPosition().getY()-this.start.getPosition().getY(), 2));
+    public Double getTemps(){
+        Double distance = Math.sqrt(Math.pow(this.end.getPosition().getX()-this.start.getPosition().getX(), 2) + Math.pow(this.end.getPosition().getY()-this.start.getPosition().getY(), 2));
+        return distance/this.vitesseMax;
     }
 
 }

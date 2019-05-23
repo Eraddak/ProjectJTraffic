@@ -4,8 +4,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.util.ArrayList;
-import java.util.Random;
 
 public class Ville extends Intersection {
 
@@ -30,7 +28,7 @@ public class Ville extends Intersection {
         }
         */
 
-        return new Car(100.0 , this, Reseau.getInstance().getCityTab().get(1));
+        return new Car(33.0 , this, Reseau.getInstance().getCityTab().get(1));
     }
 
     public Circle getVille() {
