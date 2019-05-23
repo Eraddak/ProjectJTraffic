@@ -11,13 +11,16 @@ public class Main extends Application {
     int windowSizeX = 1000;
     int windowSizeY = 600;
 
+    public void generate(Integer nb){
+        for(int i =0; i< nb; i++) {
+            for (Ville v : Reseau.getInstance().getCityTab()) {
+                Global.tab.add(v.generateVoiture());
+            }
+        }
+    }
+
     public void running(){
 
-        Global.tab.add(Reseau.getInstance().getCityTab().get(0).generateVoiture());
-
-        /*for(Ville i : Reseau.getInstance().getCityTab()){
-            Global.tab.add(i.generateVoiture());
-        }*/
         for(Car i: Global.tab){
             i.start();
         }
@@ -26,14 +29,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        generate(5);
         running();
         Global.root.getChildren().add(Reseau.getInstance().getGroupRoad());
 
         for (Car i : Global.tab) {
-            Global.root.getChildren().add(i.getVoiture());
+            Global.root.getChildren().add(i.getImage());
         }
 
-        //root.getChildren().add(Reseau.getInstance().getGroupCity());
+        Global.root.getChildren().add(Reseau.getInstance().getGroupCity());
         Global.root.getChildren().add(HUD.getInstance().getGroup());
 
         primaryStage.setScene(new Scene(Global.root, windowSizeX, windowSizeY, Color.web("0x111111", 1.0)));

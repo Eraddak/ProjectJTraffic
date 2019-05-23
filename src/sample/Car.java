@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import sample.Roads.Road;
+import sample.Roads.Road50;
 
 import java.util.ArrayList;
 
@@ -14,13 +15,15 @@ public class Car extends Thread {
     private Double speed;
     private Point2D depart;
     private Point2D end;
-    private Rectangle voiture = new Rectangle();
+    private Rectangle image = new Rectangle();
     private Double r = 0d;
     private Double angle;
     private Double currentDist = 0d;
     private Rotate rotation;
-    private ArrayList<Intersection> parcours = new ArrayList<>();
+    private ArrayList<Intersection> path = new ArrayList<>();
     private Road road;
+    private Road nextRoad;
+    private Double way;
 
     @Override
     public void run() {
@@ -36,16 +39,26 @@ public class Car extends Thread {
                 deltaTime = (now - previous) / 1000.0; //millisecondes
                 previous = now;
                 timeSec += deltaTime;
-                /*if(speed < //road && timeSec >= 0.2d) {
-                    accelerate(-1d);
-                    timeSec = 0d;
-                }*/
+
+                if(timeSec >= 0.1d){
+                    Double deltaSpeed = speed - nextRoad.getVitesseMax();
+                    Double x = speed * deltaSpeed/5;
+
+                    if (speed > road.getVitesseMax() || (deltaSpeed > 0 && r - currentDist < x)){
+                        accelerate(-0.5d);
+                        timeSec = 0d;
+                    }
+                    else if(speed < road.getVitesseMax()) {
+                        accelerate(0.5d);
+                        timeSec = 0d;
+                    }
+                }
                 if(currentDist >= r){
                     nextDestination();
                 }
                 deplacement(deltaTime);
-                if(parcours.isEmpty()) {
-                    Global.root.getChildren().remove(voiture);
+                if(path.isEmpty()) {
+                    Global.root.getChildren().remove(image);
                     this.stop();
                 }
             }
@@ -55,34 +68,53 @@ public class Car extends Thread {
 
     public Car(Double speed, Intersection depart, Intersection end) {
 
-        this.voiture.setHeight(5d);
-        this.voiture.setWidth(10d);
-        this.voiture.setStroke(Color.RED);
+        this.image.setHeight(5d);
+        this.image.setWidth(10d);
+        this.image.setStroke(Color.RED);
 
-        this.speed = speed;
+        this.speed = speed/4;
         this.depart = depart.getPosition();
         this.end = end.getPosition();
 
-        this.voiture.setX(this.depart.getX());
-        this.voiture.setY(this.depart.getY());
+        this.way = 1d;
 
-        this.parcours.add(end);
-        this.parcours.add(Reseau.getInstance().getCityTab().get(2));
-        this.parcours.add(Reseau.getInstance().getCityTab().get(3));
+        this.image.setX(this.depart.getX());
+        this.image.setY(this.depart.getY());
 
-        this.r = Math.sqrt(Math.pow(this.parcours.get(0).getPosition().getX()-this.depart.getX(), 2) + Math.pow(this.parcours.get(0).getPosition().getY()-this.depart.getY(), 2));
-        this.angle = Math.toDegrees(Math.atan2(this.parcours.get(0).getPosition().getY() - this.depart.getY(), this.parcours.get(0).getPosition().getX() - this.depart.getX()));
-        this.rotation = new Rotate(this.angle, this.voiture.getX(), this.voiture.getY());
-        this.voiture.getTransforms().add(this.rotation);
+        this.path.add(end);
+        this.path.add(Reseau.getInstance().getCityTab().get(2));
+        this.path.add(Reseau.getInstance().getCityTab().get(3));
 
-        this.voiture.setY(this.depart.getY() + this.voiture.getHeight());
+        for(Road i : depart.getLinkedRoads()){
+            for(Road j : this.path.get(0).getLinkedRoads()){
+                if(i == j){
+                    this.road = i;
+                    break;
+                }
+            }
+        }
+        for(Road i : this.path.get(0).getLinkedRoads()){
+            for(Road j : this.path.get(1).getLinkedRoads()){
+                if(i == j){
+                    this.nextRoad = i;
+                    break;
+                }
+            }
+        }
+
+        this.r = Math.sqrt(Math.pow(this.path.get(0).getPosition().getX()-this.depart.getX(), 2) + Math.pow(this.path.get(0).getPosition().getY()-this.depart.getY(), 2));
+        this.angle = Math.toDegrees(Math.atan2(this.path.get(0).getPosition().getY() - this.depart.getY(), this.path.get(0).getPosition().getX() - this.depart.getX()));
+        this.rotation = new Rotate(this.angle, this.image.getX(), this.image.getY());
+        this.image.getTransforms().add(this.rotation);
+
+        this.image.setY(this.depart.getY() + this.image.getHeight());
 
     }
 
     public void deplacement(double deltaTime){
 
         if(this.currentDist < this.r) {
-            this.voiture.setX(this.voiture.getX() + this.speed*deltaTime);
+            this.image.setX(this.image.getX() + this.speed*deltaTime);
             this.currentDist += this.speed * deltaTime;
         }
     }
@@ -92,20 +124,41 @@ public class Car extends Thread {
     }
 
     public void nextDestination(){
-        if(this.parcours.size() > 1) {
+        if(this.path.size() > 1) {
             this.currentDist = 0d;
-            this.voiture.setY(this.depart.getY());
-            this.rotation = new Rotate(-this.angle, this.voiture.getX(), this.voiture.getY());
-            this.voiture.getTransforms().add(this.rotation);
-            this.r = Math.sqrt(Math.pow(this.parcours.get(1).getPosition().getX() - this.parcours.get(0).getPosition().getX(), 2) + Math.pow(this.parcours.get(1).getPosition().getY() - this.parcours.get(0).getPosition().getY(), 2));
-            this.angle = Math.toDegrees(Math.atan2(this.parcours.get(1).getPosition().getY() - this.parcours.get(0).getPosition().getY(), this.parcours.get(1).getPosition().getX() - this.parcours.get(0).getPosition().getX()));
-            this.rotation = new Rotate(this.angle, this.voiture.getX(), this.voiture.getY());
-            this.voiture.getTransforms().add(this.rotation);
-            this.voiture.setY(this.depart.getY() + this.voiture.getHeight());
+            this.image.setY(this.depart.getY());
+            this.rotation = new Rotate(-this.angle, this.image.getX(), this.image.getY());
+            this.image.getTransforms().add(this.rotation);
+            this.r = Math.sqrt(Math.pow(this.path.get(1).getPosition().getX() - this.path.get(0).getPosition().getX(), 2) + Math.pow(this.path.get(1).getPosition().getY() - this.path.get(0).getPosition().getY(), 2));
+            this.angle = Math.toDegrees(Math.atan2(this.path.get(1).getPosition().getY() - this.path.get(0).getPosition().getY(), this.path.get(1).getPosition().getX() - this.path.get(0).getPosition().getX()));
+            this.rotation = new Rotate(this.angle, this.image.getX(), this.image.getY());
+            this.image.getTransforms().add(this.rotation);
+            this.image.setY(this.depart.getY() + this.way *this.image.getHeight());
+
+            for(Road i : this.path.get(0).getLinkedRoads()){
+                for(Road j : this.path.get(1).getLinkedRoads()){
+                    if(i == j){
+                        this.road = i;
+                        break;
+                    }
+                }
+            }
+            if(this.path.size() > 2) {
+                for (Road i : this.path.get(1).getLinkedRoads()) {
+                    for (Road j : this.path.get(2).getLinkedRoads()) {
+                        if (i == j) {
+                            this.nextRoad = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                this.nextRoad = new Road50();
 
         }
-        if(!this.parcours.isEmpty())
-            this.parcours.remove(0);
+        if(!this.path.isEmpty())
+            this.path.remove(0);
     }
 
     public Road getRoad() {
@@ -136,7 +189,7 @@ public class Car extends Thread {
         return this.end;
     }
 
-    public Rectangle getVoiture() {
-        return this.voiture;
+    public Rectangle getImage() {
+        return this.image;
     }
 }
