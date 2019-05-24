@@ -29,7 +29,7 @@ public class HUD {
 
 	private HUD() {
 		
-		final Slider traffic_slider = new Slider(50,500,100);
+		final Slider traffic_slider = new Slider(1,5,50); //valeur min,valeur de depart,valeur max
 		final Label traffic_label = new Label(" Densité du traffic  :");
 		final Label traffic_value = new Label(Double.toString(traffic_slider.getValue()));
 		traffic_value.textProperty().bind(
@@ -52,8 +52,8 @@ public class HUD {
 		HBox hbox_vitesse = new HBox(vitesse_label,vitesse_slider,vitesse_value);
 		Button start = new Button(" Start ! ");
 		start.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent e) {
-		        //reset
+		    @Override public void handle(ActionEvent e) { //action Click : Start
+		        //action
 		    }
 		});
 		VBox slider_HUD = new VBox(hbox_traffic, hbox_vitesse);
@@ -64,8 +64,9 @@ public class HUD {
 		slider_HUD.setStyle(
 	            "-fx-border-style: solid;" + 
 	            "-fx-border-width: 2;" +
-	            "-fx-background-color: rgba(54, 55, 66, 0.5);"+
-	            "-fx-border-color: grey;");
+	            "-fx-background-color: rgba(0, 171, 244, 1);"+
+	            "-fx-border-color: white;");
+		slider_HUD.setAlignment(Pos.CENTER); //centre les éléments du panneau d'interface
 		groupHUD.getChildren().addAll(slider_HUD);
 	}
 	
